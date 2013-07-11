@@ -3,25 +3,30 @@ package it.gdgperugia.hungrydroid;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class CoursesActivity extends Activity {
     private TextView resultText = null;
     private Button fetchButton = null;
     private ProgressBar progressBar = null;
+    private ListView coursesList = null;
+    private ArrayAdapter<String> adapter = null;
 
     private RequestQueue requests = null;
     private String examAPI = "http://students-exam.herokuapp.com/api/exam/.json";
@@ -34,6 +39,11 @@ public class CoursesActivity extends Activity {
         resultText = (TextView) findViewById(R.id.resultText);
         fetchButton = (Button) findViewById(R.id.fetchButton);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        coursesList = (ListView) findViewById(R.id.coursesList);
+
+        // ListView stuff!
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        coursesList.setAdapter(adapter);
 
         // Volley!
         requests = Volley.newRequestQueue(this);
@@ -41,12 +51,21 @@ public class CoursesActivity extends Activity {
 
     public void fetchExams(View v) {
         fetchingAnimation(true);
+        adapter.clear();
+
         JsonArrayRequest request = new JsonArrayRequest(examAPI,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         fetchingAnimation(false);
-                        resultText.setText("Response => " + response.toString());
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject exam = response.getJSONObject(i);
+                                adapter.add(exam.getString("course"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -60,7 +79,8 @@ public class CoursesActivity extends Activity {
     }
 
     private void fetchingAnimation(boolean isLoading) {
-        resultText.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        resultText.setVisibility(View.GONE);
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        coursesList.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
 }
