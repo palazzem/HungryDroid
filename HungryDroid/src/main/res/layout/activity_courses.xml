@@ -7,8 +7,15 @@
 
     <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_world"
-            android:id="@+id/textView"
+            android:layout_height="100dp"
+            android:text="@string/wait_to_fetch"
+            android:id="@+id/resultText"
             android:gravity="center"/>
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_fetch"
+            android:onClick="fetchExams"
+            android:id="@+id/fetchButton"/>
 </LinearLayout>

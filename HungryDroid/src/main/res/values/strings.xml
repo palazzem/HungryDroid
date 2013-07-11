@@ -3,7 +3,8 @@
 
     <string name="app_name">HungryDroid</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="splashscreen_slogan">I want to eat something!</string>
+    <string name="wait_to_fetch">Ready to fetch events...</string>
+    <string name="button_fetch">Fetch my exams</string>
 
 </resources>
