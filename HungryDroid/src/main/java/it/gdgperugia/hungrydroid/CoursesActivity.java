@@ -20,13 +20,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import it.gdgperugia.hungrydroid.models.Exam;
 
 public class CoursesActivity extends Activity {
     private TextView resultText = null;
     private Button fetchButton = null;
     private ProgressBar progressBar = null;
     private ListView coursesList = null;
-    private ArrayAdapter<String> adapter = null;
+    private ArrayAdapter<Exam> adapter = null;
 
     private RequestQueue requests = null;
     private String examAPI = "http://students-exam.herokuapp.com/api/exam/.json";
@@ -42,7 +43,7 @@ public class CoursesActivity extends Activity {
         coursesList = (ListView) findViewById(R.id.coursesList);
 
         // ListView stuff!
-        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<String>());
+        adapter = new ArrayAdapter<Exam>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<Exam>());
         coursesList.setAdapter(adapter);
 
         // Volley!
@@ -61,7 +62,7 @@ public class CoursesActivity extends Activity {
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject exam = response.getJSONObject(i);
-                                adapter.add(exam.getString("course"));
+                                adapter.add(new Exam(exam));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
