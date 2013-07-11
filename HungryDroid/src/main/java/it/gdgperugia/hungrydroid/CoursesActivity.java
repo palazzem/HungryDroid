@@ -1,8 +1,10 @@
 package it.gdgperugia.hungrydroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -45,6 +47,19 @@ public class CoursesActivity extends Activity {
         // ListView stuff!
         adapter = new ArrayAdapter<Exam>(getApplicationContext(), android.R.layout.simple_list_item_1, new ArrayList<Exam>());
         coursesList.setAdapter(adapter);
+        coursesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Exam exam = (Exam) adapterView.getItemAtPosition(position);
+                Intent intent = new Intent(CoursesActivity.this, CourseDetailsActivity.class);
+                intent.putExtra("courseName", exam.getCourseName());
+                intent.putExtra("registrationDate", exam.getRegistrationDate());
+                intent.putExtra("vote", exam.getVote());
+                intent.putExtra("honor", exam.getHonor());
+                intent.putExtra("notes", exam.getNotes());
+                startActivity(intent);
+            }
+        });
 
         // Volley!
         requests = Volley.newRequestQueue(this);
